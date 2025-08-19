@@ -7,6 +7,17 @@
     <groupId>com.nageoffer.shortlink</groupId>
     <artifactId>shortlink-all</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+
+    <!-- 这里指示了真正的子模块关系-->
+    <modules>
+        <module>admin</module>
+        <module>project</module>
+        <module>gateway</module>
+    </modules>
+    <!-- 项目打包方式为 pom，表示这是一个聚合项目或父项目，不打包为jar包 -->
+
 
     <properties>
         <java.version>17</java.version>
@@ -80,6 +91,7 @@
                 <version>${dozer-core.version}</version>
             </dependency>
 
+            <!-- hutool工具库，后续将被Apache Commons等标准库替代 -->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
