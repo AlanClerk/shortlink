@@ -9,21 +9,18 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>shortlink-admin</artifactId>
+    <artifactId>shortlink-common</artifactId>
 
-    <!--
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-    -->
+<!--    <properties>-->
+<!--        <maven.compiler.source>17</maven.compiler.source>-->
+<!--        <maven.compiler.target>17</maven.compiler.target>-->
+<!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+<!--    </properties>-->
 
-    <!--继承了父模块的版本以依赖-->
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

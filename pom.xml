@@ -6,7 +6,8 @@
 
     <groupId>com.nageoffer.shortlink</groupId>
     <artifactId>shortlink-all</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}</version>
+    <!-- 统一的版本管理，使用revision占位符，其他的都不行 -->
     <packaging>pom</packaging>
 
 
@@ -15,6 +16,7 @@
         <module>admin</module>
         <module>project</module>
         <module>gateway</module>
+        <module>common</module>
     </modules>
     <!-- 项目打包方式为 pom，表示这是一个聚合项目或父项目，不打包为jar包 -->
 
@@ -33,6 +35,7 @@
         <hutool-all.version>5.8.20</hutool-all.version>
         <redisson.version>3.21.3</redisson.version>
         <guava.version>30.0-jre</guava.version>
+        <revision>1.0-SNAPSHOT</revision>
     </properties>
 
     <dependencyManagement>
@@ -84,6 +87,7 @@
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2.version}</version>
             </dependency>
+            <!--fastjson2有朝一日也需要被替换掉-->
 
             <dependency>
                 <groupId>com.github.dozermapper</groupId>
@@ -109,6 +113,8 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
