@@ -26,12 +26,13 @@ public class ShortLinkAdminApplication {
         return event -> {
             String port = event.getApplicationContext().getEnvironment().getProperty("server.port", "8080");
             String appName = event.getApplicationContext().getEnvironment().getProperty("spring.application.name", "short-link-admin");
-            String profile = event.getApplicationContext().getEnvironment().getProperty("spring.profiles.active", "default");
+//            String profile = event.getApplicationContext().getEnvironment().getProperty("spring.profiles.active", "default");
+            // TODO 访问环境后续有待更新
 
             log.info("============================================");
             log.info("🚀 应用 [{}] 启动成功！", appName);
             log.info("🌐 访问地址: http://localhost:{}", port);
-            log.info("📌 当前环境: {}", profile);
+//            log.info("📌 当前环境: {}", profile);
             log.info("============================================");
         };
     }
