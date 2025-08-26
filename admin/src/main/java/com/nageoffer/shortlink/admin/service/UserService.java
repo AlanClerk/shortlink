@@ -2,6 +2,7 @@ package com.nageoffer.shortlink.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserRespDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserActualRespDTO;
 import com.nageoffer.shortlink.common.repository.admin.dao.entity.UserDO;
 
 /**
@@ -18,4 +19,14 @@ public interface UserService extends IService<UserDO> {
      * @return 用户响应实体
      */
     UserRespDTO getUserByUsername(String username);
+
+    /**
+     * 根据用户名查询用户真实信息（不脱敏）
+     *
+     * @param username 用户名
+     * @return 用户真实响应实体
+     */
+    UserActualRespDTO getActualUserByUsername(String username);
+
+    Boolean hasUserName(String username);
 }
