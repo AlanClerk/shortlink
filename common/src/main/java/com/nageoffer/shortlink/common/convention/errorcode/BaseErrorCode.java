@@ -16,8 +16,23 @@ public enum BaseErrorCode implements IErrorCode {
     USER_NAME_EXIST_ERROR("A000111", "用户名已存在"),
     USER_NAME_SENSITIVE_ERROR("A000112", "用户名包含敏感词"),
     USER_NAME_SPECIAL_CHARACTER_ERROR("A000113", "用户名包含特殊字符"),
+    USER_RECORD_EXIST_ERROR("A000114", "用户记录已存在"),
+    USER_REGISTER_FREQUENTLY_ERROR("A000115", "用户注册过于频繁，请稍后重试"),
+    USER_REGISTER_INTERRUPTED_ERROR("A000116", "用户注册被中断，请重试"),
     PASSWORD_VERIFY_ERROR("A000120", "密码校验失败"),
     PASSWORD_SHORT_ERROR("A000121", "密码长度不够"),
+    PASSWORD_NOT_MATCH_ERROR("A000122", "两次密码输入不一致"),
+    
+    // ========== 二级宏观错误码 用户信息错误 ==========
+    USER_NOT_EXIST_ERROR("A000130", "用户不存在"),
+    USER_UPDATE_ERROR("A000131", "用户信息更新失败"),
+    USER_PASSWORD_ERROR("A000132", "用户密码错误"),
+    
+    // ========== 二级宏观错误码 用户认证错误 ==========
+    USER_TOKEN_INVALID_ERROR("A000140", "用户Token无效"),
+    USER_TOKEN_EXPIRED_ERROR("A000141", "用户Token已过期"),
+    USER_TOKEN_NOT_MATCH_ERROR("A000142", "Token与用户名不匹配"),
+    
     PHONE_VERIFY_ERROR("A000151", "手机格式校验失败"),
 
     // ========== 二级宏观错误码 系统请求缺少幂等Token ==========

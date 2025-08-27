@@ -11,3 +11,10 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 50
+          max-idle: 20
+          min-idle: 5
+          max-wait: 3000ms

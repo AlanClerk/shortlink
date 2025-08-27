@@ -1,6 +1,11 @@
 package com.nageoffer.shortlink.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.UserLoginReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.UserLogoutReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.UserRegisterReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.UserUpdateReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserLoginRespDTO;
 import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserRespDTO;
 import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserActualRespDTO;
 import com.nageoffer.shortlink.common.repository.admin.dao.entity.UserDO;
@@ -29,4 +34,36 @@ public interface UserService extends IService<UserDO> {
     UserActualRespDTO getActualUserByUsername(String username);
 
     Boolean hasUserName(String username);
+
+    /**
+     * 用户注册
+     *
+     * @param requestParam 用户注册请求参数
+     * @return 注册成功返回 true，失败返回 false
+     */
+    Boolean register(UserRegisterReqDTO requestParam);
+
+    /**
+     * 根据用户名修改用户信息
+     *
+     * @param requestParam 用户修改请求参数
+     * @return 修改成功返回 true，失败返回 false
+     */
+    Boolean updateUser(UserUpdateReqDTO requestParam);
+
+    /**
+     * 用户登录
+     *
+     * @param requestParam 用户登录请求参数
+     * @return 登录成功返回token
+     */
+    UserLoginRespDTO login(UserLoginReqDTO requestParam);
+
+    /**
+     * 用户注销登录
+     *
+     * @param requestParam 用户登出请求参数
+     * @return 注销成功返回 true，失败返回 false
+     */
+    Boolean logout(UserLogoutReqDTO requestParam);
 }
