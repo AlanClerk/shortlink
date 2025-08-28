@@ -8,19 +8,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nageoffer.shortlink.admin.service.UserService;
 import com.nageoffer.shortlink.common.repository.admin.dao.entity.UserDO;
 import com.nageoffer.shortlink.common.repository.admin.dao.mapper.UserMapper;
-import com.nageoffer.shortlink.common.repository.admin.dto.req.UserLoginReqDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.req.UserLogoutReqDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.req.UserRegisterReqDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.req.UserUpdateReqDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserActualRespDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserLoginRespDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserRespDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.user.UserLoginReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.user.UserLogoutReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.user.UserRegisterReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.user.UserUpdateReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.resp.user.UserActualRespDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.resp.user.UserLoginRespDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.resp.user.UserRespDTO;
 
 import java.util.UUID;
 
 import com.nageoffer.shortlink.common.exception.ClientException;
 import com.nageoffer.shortlink.common.constant.RedisCacheConstant;
-import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserTokenRespDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.resp.user.UserTokenRespDTO;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBloomFilter;

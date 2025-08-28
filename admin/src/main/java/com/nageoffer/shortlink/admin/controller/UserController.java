@@ -1,13 +1,13 @@
 package com.nageoffer.shortlink.admin.controller;
 
-import com.nageoffer.shortlink.common.repository.admin.dto.req.UserLoginReqDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.req.UserLogoutReqDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.req.UserQueryReqDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.req.UserRegisterReqDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.req.UserUpdateReqDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserActualRespDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserLoginRespDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.resp.UserRespDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.user.UserLoginReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.user.UserLogoutReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.user.UserQueryReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.user.UserRegisterReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.user.UserUpdateReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.resp.user.UserActualRespDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.resp.user.UserLoginRespDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.resp.user.UserRespDTO;
 import com.nageoffer.shortlink.admin.service.UserService;
 import com.nageoffer.shortlink.common.convention.result.Result;
 import com.nageoffer.shortlink.common.convention.result.Results;

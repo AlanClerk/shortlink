@@ -1,16 +1,11 @@
-package com.nageoffer.shortlink.common.repository.admin.dto.resp;
+package com.nageoffer.shortlink.common.repository.admin.dto.resp.user;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.nageoffer.shortlink.common.util.serialize.PhoneDesensitizationSerializer;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
-/**
- * 用户响应实体类
- */
 @Data
-public class UserRespDTO {
+public class UserTokenRespDTO {
 
     /**
      * ID
@@ -23,6 +18,11 @@ public class UserRespDTO {
     private String username;
 
     /**
+     * 登录token
+     */
+    private String token;
+
+    /**
      * 真实姓名
      */
     private String realName;
@@ -30,8 +30,6 @@ public class UserRespDTO {
     /**
      * 手机号
      */
-    /// 序列化
-    @JsonSerialize(using = PhoneDesensitizationSerializer.class)
     private String phone;
 
     /**
@@ -48,4 +46,5 @@ public class UserRespDTO {
      * 修改时间
      */
     private LocalDateTime updateTime;
+
 }

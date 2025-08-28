@@ -1,4 +1,4 @@
-package com.nageoffer.shortlink.common.repository.admin.dto.resp;
+package com.nageoffer.shortlink.common.repository.admin.dto.resp.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

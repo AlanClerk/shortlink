@@ -1,11 +1,14 @@
-package com.nageoffer.shortlink.common.repository.admin.dto.resp;
+package com.nageoffer.shortlink.common.repository.admin.dto.resp.user;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * 不含序列化的用户响应实体类
+ */
 @Data
-public class UserTokenRespDTO {
+public class UserActualRespDTO {
 
     /**
      * ID
@@ -16,11 +19,6 @@ public class UserTokenRespDTO {
      * 用户名
      */
     private String username;
-
-    /**
-     * 登录token
-     */
-    private String token;
 
     /**
      * 真实姓名
@@ -46,5 +44,4 @@ public class UserTokenRespDTO {
      * 修改时间
      */
     private LocalDateTime updateTime;
-
 }
