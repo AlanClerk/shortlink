@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 
+/**
+ * 用户管理控制层
+ * 提供用户相关的API接口，包括用户查询、注册、登录、修改信息、注销等操作
+ */
 @RestController
 @RequestMapping("/api/short-link/user/v1")
 @RequiredArgsConstructor

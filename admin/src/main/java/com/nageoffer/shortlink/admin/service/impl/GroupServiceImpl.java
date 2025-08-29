@@ -9,20 +9,22 @@ import com.nageoffer.shortlink.common.repository.admin.dto.req.group.GroupCreate
 import com.nageoffer.shortlink.common.repository.admin.dto.req.group.GroupUpdateReqDTO;
 import com.nageoffer.shortlink.common.repository.admin.dto.resp.group.GroupListRespDTO;
 import com.nageoffer.shortlink.common.repository.admin.dto.resp.group.GroupRespDTO;
+import com.nageoffer.shortlink.common.convention.errorcode.BaseErrorCode;
 import com.nageoffer.shortlink.common.exception.ClientException;
 import com.nageoffer.shortlink.common.util.BeanUtil;
 import lombok.RequiredArgsConstructor;
-import org.redisson.api.RLock;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
 
 /**
  * 短链接分组接口实现层
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
@@ -36,36 +38,27 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         
         // 检查分组名称是否已存在
         if (groupDAO.existsByUsernameAndName(username, requestParam.getName())) {
-            throw new ClientException("分组名称已存在");
+            throw new ClientException(BaseErrorCode.GROUP_NAME_EXIST_ERROR);
         }
-
-        // 生成分组标识
-        String gid = generateGid();
         
-        // 分布式锁防止并发创建相同gid
-        RLock lock = redissonClient.getLock("create_group_" + gid);
-        lock.lock();
-        try {
-            // 再次检查gid是否存在
-            while (groupDAO.existsByGid(gid)) {
-                gid = generateGid();
-            }
-
-            GroupDO groupDO = new GroupDO();
-            groupDO.setGid(gid);
-            groupDO.setName(requestParam.getName());
-            groupDO.setUsername(username);
-            groupDO.setSortOrder(requestParam.getSortOrder() != null ? 
-                requestParam.getSortOrder() : groupDAO.getNextSortOrder(username));
-            groupDO.setCreateTime(LocalDateTime.now());
-            groupDO.setUpdateTime(LocalDateTime.now());
-            groupDO.setDelFlag(0);
-
-            save(groupDO);
-            return gid;
-        } finally {
-            lock.unlock();
-        }
+        // 生成唯一的gid
+        String gid;
+        do {
+            gid = generateGid();
+        } while (groupDAO.existsByGid(gid));
+        
+        // 使用builder模式构建GroupDO对象
+        GroupDO groupDO = GroupDO.builder()
+                .gid(gid)
+                .name(requestParam.getName())
+                .username(username)
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .delFlag(0)  // 0表示未删除，1表示已删除
+                .build();
+        baseMapper.insert(groupDO);
+        
+        return gid;
     }
 
     @Override
@@ -79,7 +72,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         String username = getCurrentUsername();
         GroupDO groupDO = groupDAO.selectOneByUsernameAndGid(username, gid);
         if (groupDO == null) {
-            throw new ClientException("分组不存在");
+            throw new ClientException(BaseErrorCode.GROUP_NOT_EXIST_ERROR);
         }
         return BeanUtil.convert(groupDO, GroupRespDTO.class);
     }
@@ -91,14 +84,14 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         // 检查分组是否存在
         GroupDO existGroup = groupDAO.selectOneByUsernameAndGid(username, requestParam.getGid());
         if (existGroup == null) {
-            throw new ClientException("分组不存在");
+            throw new ClientException(BaseErrorCode.GROUP_NOT_EXIST_ERROR);
         }
 
         // 如果修改分组名称，检查是否与其他分组重名
         if (requestParam.getName() != null && 
             !requestParam.getName().equals(existGroup.getName()) &&
             groupDAO.existsByUsernameAndName(username, requestParam.getName())) {
-            throw new ClientException("分组名称已存在");
+            throw new ClientException(BaseErrorCode.GROUP_NAME_EXIST_ERROR);
         }
 
         // 更新分组信息
@@ -120,7 +113,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         // 检查分组是否存在
         GroupDO existGroup = groupDAO.selectOneByUsernameAndGid(username, gid);
         if (existGroup == null) {
-            throw new ClientException("分组不存在");
+            throw new ClientException(BaseErrorCode.GROUP_NOT_EXIST_ERROR);
         }
 
         // TODO: 检查分组下是否有短链接，如果有则不允许删除
@@ -135,7 +128,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         // 检查分组是否存在
         GroupDO existGroup = groupDAO.selectOneByUsernameAndGid(username, gid);
         if (existGroup == null) {
-            throw new ClientException("分组不存在");
+            throw new ClientException(BaseErrorCode.GROUP_NOT_EXIST_ERROR);
         }
 
         return groupDAO.updateSortOrder(gid, username, sortOrder) > 0;
@@ -152,17 +145,25 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     }
 
     /**
-     * 生成分组标识
+     * 生成分组标识 - 6位数字字母混合字符串
      */
     private String generateGid() {
-        return UUID.randomUUID().toString().replace("-", "").substring(0, 6);
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuilder gid = new StringBuilder(6);
+        
+        for (int i = 0; i < 6; i++) {
+            gid.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        
+        return gid.toString();
     }
 
     /**
      * 获取当前用户名（此处为示例，实际应从上下文中获取）
      */
     private String getCurrentUsername() {
-        // TODO: 从SecurityContext或请求头中获取当前用户名
+        // TODO: 从SecurityContext或请求头中获取当前用户名，这部分应该是要由网关来存到ThreadLocal的，这里只是为了演示，后续再进行补充
         return "admin"; // 临时返回，实际需要从认证上下文获取
     }
 }

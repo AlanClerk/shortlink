@@ -1,8 +1,7 @@
 package com.nageoffer.shortlink.admin.controller;
 
 import com.nageoffer.shortlink.admin.service.GroupService;
-import com.nageoffer.shortlink.common.repository.admin.dto.req.group.GroupCreateReqDTO;
-import com.nageoffer.shortlink.common.repository.admin.dto.req.group.GroupUpdateReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.group.*;
 import com.nageoffer.shortlink.common.repository.admin.dto.resp.group.GroupListRespDTO;
 import com.nageoffer.shortlink.common.repository.admin.dto.resp.group.GroupRespDTO;
 import com.nageoffer.shortlink.common.convention.result.Result;
@@ -26,7 +25,7 @@ public class GroupController {
     /**
      * 新增短链接分组
      */
-    @PostMapping
+    @PostMapping("/create")
     public Result<String> createGroup(@RequestBody @Valid GroupCreateReqDTO requestParam) {
         String gid = groupService.createGroup(requestParam);
         return Results.success(gid);
@@ -35,25 +34,25 @@ public class GroupController {
     /**
      * 查询短链接分组列表
      */
-    @GetMapping
-    public Result<List<GroupListRespDTO>> listGroups(@RequestParam String username) {
-        List<GroupListRespDTO> result = groupService.listGroupsByUsername(username);
+    @PostMapping("/list")
+    public Result<List<GroupListRespDTO>> listGroups(@RequestBody @Valid GroupListReqDTO requestParam) {
+        List<GroupListRespDTO> result = groupService.listGroupsByUsername(requestParam.getUsername());
         return Results.success(result);
     }
 
     /**
      * 根据分组标识查询短链接分组详情
      */
-    @GetMapping("/{gid}")
-    public Result<GroupRespDTO> getGroup(@PathVariable String gid) {
-        GroupRespDTO result = groupService.getGroupByGid(gid);
+    @PostMapping("/get")
+    public Result<GroupRespDTO> getGroup(@RequestBody @Valid GroupGetReqDTO requestParam) {
+        GroupRespDTO result = groupService.getGroupByGid(requestParam.getGid());
         return Results.success(result);
     }
 
     /**
      * 修改短链接分组
      */
-    @PutMapping
+    @PostMapping("/update")
     public Result<Void> updateGroup(@RequestBody @Valid GroupUpdateReqDTO requestParam) {
         groupService.updateGroup(requestParam);
         return Results.success();
@@ -62,36 +61,36 @@ public class GroupController {
     /**
      * 删除短链接分组
      */
-    @DeleteMapping("/{gid}")
-    public Result<Void> deleteGroup(@PathVariable String gid) {
-        groupService.deleteGroup(gid);
+    @PostMapping("/delete")
+    public Result<Void> deleteGroup(@RequestBody @Valid GroupDeleteReqDTO requestParam) {
+        groupService.deleteGroup(requestParam.getGid());
         return Results.success();
     }
 
     /**
      * 排序短链接分组
      */
-    @PutMapping("/sort")
-    public Result<Void> sortGroup(@RequestParam String gid, @RequestParam Integer sortOrder) {
-        groupService.sortGroup(gid, sortOrder);
+    @PostMapping("/sort")
+    public Result<Void> sortGroup(@RequestBody @Valid GroupSortReqDTO requestParam) {
+        groupService.sortGroup(requestParam.getGid(), requestParam.getSortOrder());
         return Results.success();
     }
 
     /**
      * 检查分组标识是否存在
      */
-    @GetMapping("/has-gid")
-    public Result<Boolean> hasGid(@RequestParam String gid) {
-        Boolean result = groupService.hasGid(gid);
+    @PostMapping("/has-gid")
+    public Result<Boolean> hasGid(@RequestBody @Valid GroupHasGidReqDTO requestParam) {
+        Boolean result = groupService.hasGid(requestParam.getGid());
         return Results.success(result);
     }
 
     /**
      * 检查用户下分组名称是否存在
      */
-    @GetMapping("/has-group-name")
-    public Result<Boolean> hasGroupName(@RequestParam String username, @RequestParam String name) {
-        Boolean result = groupService.hasGroupName(username, name);
+    @PostMapping("/has-group-name")
+    public Result<Boolean> hasGroupName(@RequestBody @Valid GroupHasGroupNameReqDTO requestParam) {
+        Boolean result = groupService.hasGroupName(requestParam.getUsername(), requestParam.getName());
         return Results.success(result);
     }
 }

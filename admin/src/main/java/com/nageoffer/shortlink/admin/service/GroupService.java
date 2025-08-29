@@ -17,6 +17,7 @@ public interface GroupService extends IService<GroupDO> {
     /**
      * 新增短链接分组
      *
+     * 马丁的版本别名是saveGroup
      * @param requestParam 新增短链接分组请求参数
      * @return 分组标识
      */
