@@ -6,6 +6,7 @@ import com.nageoffer.shortlink.common.repository.admin.dao.entity.GroupDO;
 import com.nageoffer.shortlink.common.repository.admin.dao.mapper.GroupMapper;
 import com.nageoffer.shortlink.common.repository.admin.dao.mapper.impl.GroupDAO;
 import com.nageoffer.shortlink.common.repository.admin.dto.req.group.GroupCreateReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.group.GroupSortReqDTO;
 import com.nageoffer.shortlink.common.repository.admin.dto.req.group.GroupUpdateReqDTO;
 import com.nageoffer.shortlink.common.repository.admin.dto.resp.group.GroupListRespDTO;
 import com.nageoffer.shortlink.common.repository.admin.dto.resp.group.GroupRespDTO;
@@ -110,7 +111,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     @Override
     public Boolean deleteGroup(String gid) {
         String username = getCurrentUsername();
-        
+
         // 检查分组是否存在
         GroupDO existGroup = groupDAO.selectOneByUsernameAndGid(username, gid);
         if (existGroup == null) {
@@ -118,21 +119,27 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         }
 
         // TODO: 检查分组下是否有短链接，如果有则不允许删除
-        
+
         return groupDAO.logicDelete(gid, username) > 0;
     }
 
     @Override
-    public Boolean sortGroup(String gid, Integer sortOrder) {
+    public Boolean batchSortGroup(List<GroupSortReqDTO> requestParam) {
         String username = getCurrentUsername();
         
-        // 检查分组是否存在
-        GroupDO existGroup = groupDAO.selectOneByUsernameAndGid(username, gid);
-        if (existGroup == null) {
-            throw new ClientException(BaseErrorCode.GROUP_NOT_EXIST_ERROR);
+        // 批量更新每个分组的排序
+        for (GroupSortReqDTO sortReq : requestParam) {
+            // 检查分组是否存在
+            GroupDO existGroup = groupDAO.selectOneByUsernameAndGid(username, sortReq.getGid());
+            if (existGroup == null) {
+                throw new ClientException(BaseErrorCode.GROUP_NOT_EXIST_ERROR);
+            }
+            
+            // 更新排序
+            groupDAO.updateSortOrder(sortReq.getGid(), username, sortReq.getSortOrder());
         }
-
-        return groupDAO.updateSortOrder(gid, username, sortOrder) > 0;
+        
+        return true;
     }
 
     @Override

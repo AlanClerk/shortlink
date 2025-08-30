@@ -73,8 +73,8 @@ public class GroupController {
      * 排序短链接分组
      */
     @PostMapping("/sort")
-    public Result<Void> sortGroup(@RequestBody @Valid GroupSortReqDTO requestParam) {
-        groupService.sortGroup(requestParam.getGid(), requestParam.getSortOrder());
+    public Result<Void> sortGroup(@RequestBody @Valid List<GroupSortReqDTO> requestParam) {
+        groupService.batchSortGroup(requestParam);
         return Results.success();
     }
 

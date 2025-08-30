@@ -3,6 +3,7 @@ package com.nageoffer.shortlink.admin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.nageoffer.shortlink.common.repository.admin.dao.entity.GroupDO;
 import com.nageoffer.shortlink.common.repository.admin.dto.req.group.GroupCreateReqDTO;
+import com.nageoffer.shortlink.common.repository.admin.dto.req.group.GroupSortReqDTO;
 import com.nageoffer.shortlink.common.repository.admin.dto.req.group.GroupUpdateReqDTO;
 import com.nageoffer.shortlink.common.repository.admin.dto.resp.group.GroupListRespDTO;
 import com.nageoffer.shortlink.common.repository.admin.dto.resp.group.GroupRespDTO;
@@ -56,13 +57,12 @@ public interface GroupService extends IService<GroupDO> {
     Boolean deleteGroup(String gid);
 
     /**
-     * 排序短链接分组
+     * 批量排序短链接分组
      *
-     * @param gid 分组标识
-     * @param sortOrder 排序序号
+     * @param requestParam 批量排序请求参数列表
      * @return 排序成功返回 true，失败返回 false
      */
-    Boolean sortGroup(String gid, Integer sortOrder);
+    Boolean batchSortGroup(List<GroupSortReqDTO> requestParam);
 
     /**
      * 检查分组标识是否存在
