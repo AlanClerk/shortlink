@@ -33,9 +33,11 @@ public class GroupController {
 
     /**
      * 查询短链接分组列表
+     * 后续不用传，直接从TheadLocal中获取即可
      */
     @PostMapping("/list")
     public Result<List<GroupListRespDTO>> listGroups(@RequestBody @Valid GroupListReqDTO requestParam) {
+        // TODO 从当前请求中获取用户名
         List<GroupListRespDTO> result = groupService.listGroupsByUsername(requestParam.getUsername());
         return Results.success(result);
     }

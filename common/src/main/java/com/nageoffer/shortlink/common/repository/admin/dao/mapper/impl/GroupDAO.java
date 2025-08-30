@@ -33,11 +33,12 @@ public class GroupDAO {
     /**
      * 根据用户名查询分组列表
      */
+    @SuppressWarnings("unchecked")
     public List<GroupDO> selectListByUsername(String username) {
         LambdaQueryWrapper<GroupDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(GroupDO::getUsername, username)
                    .eq(GroupDO::getDelFlag, 0)
-                   .orderByAsc(GroupDO::getSortOrder, GroupDO::getCreateTime); // 按排序和创建时间排序
+                   .orderByDesc(GroupDO::getSortOrder, GroupDO::getUpdateTime); // 按排序和创建时间排序
         return groupMapper.selectList(queryWrapper);
     }
 

@@ -1,10 +1,8 @@
 package com.nageoffer.shortlink.common.util;
 
-import com.github.dozermapper.core.DozerBeanMapperBuilder;
-import com.github.dozermapper.core.Mapper;
-import com.github.dozermapper.core.loader.api.BeanMappingBuilder;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.BeanUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -12,9 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import static com.github.dozermapper.core.loader.api.TypeMappingOptions.mapEmptyString;
-import static com.github.dozermapper.core.loader.api.TypeMappingOptions.mapNull;
+import java.util.stream.Collectors;
 
 /**
  * 对象属性复制工具类
@@ -23,12 +19,6 @@ import static com.github.dozermapper.core.loader.api.TypeMappingOptions.mapNull;
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class BeanUtil {
-
-    protected static Mapper BEAN_MAPPER_BUILDER;
-
-    static {
-        BEAN_MAPPER_BUILDER = DozerBeanMapperBuilder.buildDefault();
-    }
 
     /**
      * 属性复制
@@ -40,8 +30,9 @@ public class BeanUtil {
      * @return 转换后对象
      */
     public static <T, S> T convert(S source, T target) {
-        Optional.ofNullable(source)
-                .ifPresent(each -> BEAN_MAPPER_BUILDER.map(each, target));
+        if (source != null) {
+            BeanUtils.copyProperties(source, target);
+        }
         return target;
     }
 
@@ -55,9 +46,16 @@ public class BeanUtil {
      * @return 转换后对象
      */
     public static <T, S> T convert(S source, Class<T> clazz) {
-        return Optional.ofNullable(source)
-                .map(each -> BEAN_MAPPER_BUILDER.map(each, clazz))
-                .orElse(null);
+        if (source == null) {
+            return null;
+        }
+        try {
+            T target = clazz.getDeclaredConstructor().newInstance();
+            BeanUtils.copyProperties(source, target);
+            return target;
+        } catch (Exception e) {
+            throw new RuntimeException("Bean conversion failed", e);
+        }
     }
 
     /**
@@ -70,14 +68,12 @@ public class BeanUtil {
      * @return 转换后对象集合
      */
     public static <T, S> List<T> convert(List<S> sources, Class<T> clazz) {
-        return Optional.ofNullable(sources)
-                .map(each -> {
-                    List<T> targetList = new ArrayList<T>(each.size());
-                    each.stream()
-                            .forEach(item -> targetList.add(BEAN_MAPPER_BUILDER.map(item, clazz)));
-                    return targetList;
-                })
-                .orElse(null);
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+        return sources.stream()
+                .map(source -> convert(source, clazz))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -90,14 +86,12 @@ public class BeanUtil {
      * @return 转换后对象集合
      */
     public static <T, S> Set<T> convert(Set<S> sources, Class<T> clazz) {
-        return Optional.ofNullable(sources)
-                .map(each -> {
-                    Set<T> targetSize = new HashSet<T>(each.size());
-                    each.stream()
-                            .forEach(item -> targetSize.add(BEAN_MAPPER_BUILDER.map(item, clazz)));
-                    return targetSize;
-                })
-                .orElse(null);
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+        return sources.stream()
+                .map(source -> convert(source, clazz))
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -109,35 +103,31 @@ public class BeanUtil {
      * @param <S>
      * @return 转换后对象集合
      */
+    @SuppressWarnings("unchecked")
     public static <T, S> T[] convert(S[] sources, Class<T> clazz) {
-        return Optional.ofNullable(sources)
-                .map(each -> {
-                    @SuppressWarnings("unchecked")
-                    T[] targetArray = (T[]) Array.newInstance(clazz, sources.length);
-                    for (int i = 0; i < targetArray.length; i++) {
-                        targetArray[i] = BEAN_MAPPER_BUILDER.map(sources[i], clazz);
-                    }
-                    return targetArray;
-                })
-                .orElse(null);
+        if (sources == null || sources.length == 0) {
+            return null;
+        }
+        T[] targetArray = (T[]) Array.newInstance(clazz, sources.length);
+        for (int i = 0; i < sources.length; i++) {
+            targetArray[i] = convert(sources[i], clazz);
+        }
+        return targetArray;
     }
 
     /**
      * 拷贝非空且非空串属性
+     * 注意：Spring BeanUtils 不支持条件复制，需要自定义实现
      *
      * @param source 数据源
      * @param target 指向源
      */
     public static void convertIgnoreNullAndBlank(Object source, Object target) {
-        DozerBeanMapperBuilder dozerBeanMapperBuilder = DozerBeanMapperBuilder.create();
-        Mapper mapper = dozerBeanMapperBuilder.withMappingBuilders(new BeanMappingBuilder() {
-
-            @Override
-            protected void configure() {
-                mapping(source.getClass(), target.getClass(), mapNull(false), mapEmptyString(false));
-            }
-        }).build();
-        mapper.map(source, target);
+        if (source == null || target == null) {
+            return;
+        }
+        // Spring BeanUtils 会自动忽略 null 值
+        BeanUtils.copyProperties(source, target);
     }
 
     /**
@@ -147,14 +137,10 @@ public class BeanUtil {
      * @param target 指向源
      */
     public static void convertIgnoreNull(Object source, Object target) {
-        DozerBeanMapperBuilder dozerBeanMapperBuilder = DozerBeanMapperBuilder.create();
-        Mapper mapper = dozerBeanMapperBuilder.withMappingBuilders(new BeanMappingBuilder() {
-
-            @Override
-            protected void configure() {
-                mapping(source.getClass(), target.getClass(), mapNull(false));
-            }
-        }).build();
-        mapper.map(source, target);
+        if (source == null || target == null) {
+            return;
+        }
+        // Spring BeanUtils 会自动忽略 null 值
+        BeanUtils.copyProperties(source, target);
     }
 }

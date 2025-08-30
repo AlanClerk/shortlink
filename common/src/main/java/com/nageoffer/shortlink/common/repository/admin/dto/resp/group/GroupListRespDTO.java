@@ -27,4 +27,5 @@ public class GroupListRespDTO {
      * 分组内短链接数量
      */
     private Integer linkCount;
+    ///  分组内短链接数量暂时不知道
 }

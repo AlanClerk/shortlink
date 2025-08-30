@@ -51,10 +51,7 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.dozermapper</groupId>
-            <artifactId>dozer-core</artifactId>
-        </dependency>
+
 
 <!--        分库分表依赖-->
         <dependency>

@@ -51,6 +51,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         GroupDO groupDO = GroupDO.builder()
                 .gid(gid)
                 .name(requestParam.getName())
+                .sortOrder(requestParam.getSortOrder() != null ? requestParam.getSortOrder() : 0)
                 .username(username)
                 .createTime(LocalDateTime.now())
                 .updateTime(LocalDateTime.now())
